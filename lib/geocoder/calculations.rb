@@ -209,8 +209,13 @@ module Geocoder
     # * <tt>:units</tt> - <tt>:mi</tt> or <tt>:km</tt>.
     #   Use Geocoder.configure(:units => ...) to configure default units.
     #
+
+    ## NEW - FORKED CHANGES
+    # Increases radius to min_dist if provided
+    # min_dist is an estimated size you would like to look for other nearby locations
     def bounding_box(point, radius, options = {})
       lat,lon = extract_coordinates(point)
+      radius = options[:min_dist] if options[:min_dist] && options[:min_dist] > radius
       radius  = radius.to_f
       units   = options[:units] || Geocoder.config.units
       [

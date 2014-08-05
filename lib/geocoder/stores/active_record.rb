@@ -111,6 +111,10 @@ module Geocoder::Store
       #                        ignored if database is sqlite.
       #                        default is 0.0
       #
+      # * NEW - FORKED CHANGES:
+      #   adds the addition of 'locations.radius' to the query. This is hard coded and designed only to work with our data structure.
+      #   Learn from it and adapt to your own uses if you want.
+      #   ooo OOO ahh AHH ~ monkey patched
       def near_scope_options(latitude, longitude, radius = 20, options = {})
         if options[:units]
           options[:units] = options[:units].to_sym
@@ -135,7 +139,7 @@ module Geocoder::Store
           conditions = bounding_box_conditions
         else
           min_radius = options.fetch(:min_radius, 0).to_f
-          conditions = [bounding_box_conditions + " AND (#{distance}) BETWEEN ? AND ?", min_radius, radius]
+          conditions = [bounding_box_conditions + " AND (#{distance} + locations.radius) BETWEEN ? AND ?", min_radius, radius]
         end
         {
           :select => select_clause(options[:select],

@@ -139,7 +139,7 @@ module Geocoder::Store
           conditions = bounding_box_conditions
         else
           min_radius = options.fetch(:min_radius, 0).to_f
-          conditions = [bounding_box_conditions + " AND (#{distance} + locations.radius) BETWEEN ? AND ?", min_radius, radius]
+          conditions = [bounding_box_conditions + " AND (#{distance}) BETWEEN ? AND (? + locations.radius)", min_radius, radius]
         end
         {
           :select => select_clause(options[:select],
